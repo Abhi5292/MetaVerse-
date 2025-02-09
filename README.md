@@ -1,2 +1,0 @@
-# MetaVerse-
-THE METAVERSE 🚀(BEGINING OF NEW ERA)🚀🚀
