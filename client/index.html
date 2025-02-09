@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cyberpunk Daily Bonus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --neon-blue: #00f7ff;
+        --dark-bg: #111111;
+        --glow-strength: 5px;
+      }
+
+      body {
+        font-family: 'Roboto Mono', monospace;
+        background-color: var(--dark-bg);
+        color: var(--neon-blue);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Background grid effect */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        background-image: 
+          linear-gradient(rgba(0, 247, 255, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 247, 255, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        transform: translate(-25%, -25%) rotate(45deg);
+        animation: gridMove 20s linear infinite;
+        z-index: -1;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        position: relative;
+      }
+
+      .character {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 20px;
+        position: relative;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .character::after {
+        content: '';
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 160px;
+        height: 20px;
+        background: radial-gradient(ellipse at center, rgba(0, 247, 255, 0.4) 0%, transparent 70%);
+        animation: shadowPulse 3s ease-in-out infinite;
+      }
+
+      .points {
+        font-size: 3rem;
+        font-weight: bold;
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+        margin-bottom: 1rem;
+      }
+
+      .level-bar {
+        width: 100%;
+        height: 20px;
+        background: rgba(0, 247, 255, 0.1);
+        border: 2px solid var(--neon-blue);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 2rem;
+      }
+
+      .level-progress {
+        width: 15%;
+        height: 100%;
+        background: var(--neon-blue);
+        box-shadow: 0 0 10px var(--neon-blue);
+        transition: width 0.3s ease;
+      }
+
+      .level-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.8rem;
+        color: white;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+      .level-indicator {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+        margin-bottom: 1rem;
+      }
+      .progress-outer {
+        width: 100%;
+        height: 20px;
+        background: rgba(0, 247, 255, 0.1);
+        border: 2px solid var(--neon-blue);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 2rem;
+      }
+      .progress-inner {
+        width: 15%;
+        height: 100%;
+        background: var(--neon-blue);
+        box-shadow: 0 0 10px var(--neon-blue);
+        transition: width 0.3s ease;
+      }
+
+      .nav-tabs {
+        display: flex;
+        justify-content: space-around;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 247, 255, 0.3);
+      }
+
+      .nav-tab {
+        color: var(--neon-blue);
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .nav-tab.active {
+        background: rgba(0, 247, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 247, 255, 0.3);
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
+
+      @keyframes shadowPulse {
+        0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+        50% { opacity: 0.3; transform: translateX(-50%) scale(0.8); }
+      }
+
+      @keyframes gridMove {
+        0% { transform: translate(-25%, -25%) rotate(45deg); }
+        100% { transform: translate(-75%, -75%) rotate(45deg); }
+      }
+
+      /* Particle effect */
+      .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .particle {
+        position: absolute;
+        background: var(--neon-blue);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      @keyframes particleFloat {
+        0% { transform: translateY(0); opacity: 0; }
+        50% { opacity: 0.5; }
+        100% { transform: translateY(-100px); opacity: 0; }
+      }
+
+      /* CRT screen effect */
+      .crt {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 100;
+        animation: flicker 0.15s infinite;
+      }
+
+      .crt::before {
+        content: " ";
+        display: block;
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 247, 255, 0.02), rgba(0, 0, 255, 0.06));
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+      }
+      /* Add new title styles */
+      .title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+        margin-bottom: 2rem;
+        letter-spacing: 3px;
+        position: relative;
+        text-transform: uppercase;
+      }
+
+      .title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 2px;
+        background: var(--neon-blue);
+        box-shadow: 0 0 10px var(--neon-blue);
+      }
+
+      /* Add flash animation */
+      @keyframes flashImage {
+        0% { opacity: 0; transform: scale(1.2); }
+        50% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(0.8); }
+      }
+
+      .flash-image {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        z-index: 1000;
+        animation: flashImage 2s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="attached_assets/article23-1 (1).jpg" class="flash-image" />
+    <div class="crt"></div>
+    <div class="container">
+      <h1 class="title">MetaVerse: A new era</h1>
+      <div class="character">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="75" fill="url(#auraGradient)" filter="url(#glow)"/>
+          <circle cx="100" cy="100" r="65" fill="#00f7ff" filter="url(#glow)"/>
+          <path d="M70 90 L80 95 L70 100 Z" fill="white" filter="url(#glow)"/>
+          <path d="M130 90 L120 95 L130 100 Z" fill="white" filter="url(#glow)"/>
+          <path d="M75 110 Q100 130 125 110" stroke="white" stroke-width="4" fill="none" filter="url(#smallGlow)"/>
+          <circle cx="130" cy="70" r="3" fill="white" filter="url(#smallGlow)">
+            <animate attributeName="cy" values="70;65;70" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="70" cy="75" r="3" fill="white" filter="url(#smallGlow)">
+            <animate attributeName="cy" values="75;70;75" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+          <defs>
+            <radialGradient id="auraGradient">
+              <stop offset="0%" stop-color="#00f7ff" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#00f7ff" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            <filter id="smallGlow">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+        </svg>
+        <div class="particles"></div>
+      </div>
+      <div class="level-indicator">HELL LV1</div>
+      <div class="points">5,048</div>
+      <div class="progress-outer">
+        <div class="progress-inner"></div>
+      </div>
+      <div class="nav-tabs">
+        <a href="#" class="nav-tab active" data-sound="raindrop">Games</a>
+        <a href="#" class="nav-tab" data-sound="raindrop">Wallet</a>
+        <a href="#" class="nav-tab" data-sound="raindrop">Airdrop</a>
+        <a href="#" class="nav-tab" data-sound="raindrop">Tasks</a>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
